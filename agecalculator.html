@@ -1,0 +1,81 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Age Calculator </title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 20px;
+        }
+
+        #imageDisplay {
+            margin-top: 20px;
+            max-width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <h1>Age Calculator App</h1>
+
+    <label for="birthdate">Enter your birthdate:</label>
+    <input type="date" id="birthdate" onchange="calculateAge()">
+    
+    <div id="output"></div>
+
+    <input type="file" id="fileInput" accept="image/*" style="margin-top: 20px;">
+    <img id="imageDisplay" alt="Uploaded Image">
+
+    <script>
+        function calculateAge() {
+            const birthdateInput = document.getElementById('birthdate');
+            const outputDiv = document.getElementById('output');
+            const ageOutput = document.createElement('p');
+
+            const birthdate = new Date(birthdateInput.value);
+            const today = new Date();
+
+            if (isNaN(birthdate)) {
+                outputDiv.innerHTML = 'Please enter a valid birthdate.';
+                return;
+            }
+
+            const age = today.getFullYear() - birthdate.getFullYear();
+            const monthDiff = today.getMonth() - birthdate.getMonth();
+            
+            if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthdate.getDate())) {
+                age--;
+            }
+
+            ageOutput.textContent = `Your age is: ${age} years.`;
+            outputDiv.innerHTML = '';
+            outputDiv.appendChild(ageOutput);
+        }
+
+        function displayImage() {
+            const fileInput = document.getElementById('fileInput');
+            const imageDisplay = document.getElementById('imageDisplay');
+            const outputDiv = document.getElementById('output');
+
+            const file = fileInput.files[0];
+            if (!file) {
+                outputDiv.innerHTML = 'Please select an image.';
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                imageDisplay.src = e.target.result;
+            };
+
+            reader.readAsDataURL(file);
+        }
+
+        document.getElementById('fileInput').addEventListener('change', displayImage);
+    </script>
+    
+</body>
+</html>
